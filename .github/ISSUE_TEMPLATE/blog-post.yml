@@ -5,7 +5,3 @@ labels: ["blog-post"]
 body:
   - type: textarea
     id: content
-    attributes:
-      label: Poem
-    validations:
-      required: true
