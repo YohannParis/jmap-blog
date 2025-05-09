@@ -4,4 +4,4 @@ title: "Title"
 labels: ["blog-post"]
 body:
   - type: textarea
-    id: content
+    label: "Poem"
