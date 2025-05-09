@@ -38,6 +38,11 @@ jobs:
           # Define file path
           POST_PATH="_posts/${POST_DATE}-${POST_SLUG}.md"
 
+          # Get issue body and clean up the heading markdown
+          BODY="${{ github.event.issue.body }}"
+          # Remove "### Poem" heading and trim whitespace
+          CLEAN_BODY=$(echo "$BODY" | sed 's/### Poem//g' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | sed '/^$/d')
+
           # Create markdown file with frontmatter
           cat > "${POST_PATH}" << EOF
           ---
@@ -45,7 +50,7 @@ jobs:
           date: ${POST_DATE}
           ---
 
-          ${{ github.event.issue.body }}
+          $CLEAN_BODY
           EOF
 
           echo "Created post at ${POST_PATH}"
