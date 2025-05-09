@@ -1,10 +1,6 @@
 const Imap = require('imap');
 const simpleParser = require('simple-mail-parser');
-const fs = require('fs');
-const path = require('path');
-const { promisify } = require('util');
-const writeFile = promisify(fs.writeFile);
-const mkdir = promisify(fs.mkdir);
+const { Octokit } = require('@octokit/rest');
 
 // IMAP configuration from GitHub secrets
 const imap = new Imap({
@@ -16,12 +12,13 @@ const imap = new Imap({
   tlsOptions: { rejectUnauthorized: false }
 });
 
-function createSlug(text) {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
+// GitHub setup
+const octokit = new Octokit({
+  auth: process.env.GITHUB_TOKEN
+});
+
+const owner = process.env.GITHUB_REPO_OWNER;
+const repo = process.env.GITHUB_REPO_NAME;
 
 function openInbox(cb) {
   imap.openBox('INBOX', false, cb);
@@ -59,25 +56,20 @@ imap.once('ready', function() {
               return;
             }
             
-            const today = new Date().toISOString().split('T')[0];
-            const slug = createSlug(title);
-            const fileName = `${today}-${slug}.md`;
-            const filePath = path.join('content', 'posts', fileName);
-            
-            // Ensure the directory exists
-            await mkdir(path.join('content', 'posts'), { recursive: true });
-            
-            // Create markdown file with frontmatter
-            const markdown = `---
-title: "${title}"
-date: ${today}
----
-
-${content}
-`;
-            
-            await writeFile(filePath, markdown);
-            console.log(`Created post: ${filePath}`);
+            try {
+              // Create a new GitHub issue with label 'blog-post'
+              const response = await octokit.rest.issues.create({
+                owner,
+                repo,
+                title,
+                body: content,
+                labels: ['blog-post']
+              });
+              
+              console.log(`Created issue: ${response.data.html_url}`);
+            } catch (error) {
+              console.error('Failed to create issue:', error);
+            }
           });
         });
       });
