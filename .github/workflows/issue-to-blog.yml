@@ -1,7 +1,11 @@
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
 name: Convert Issue to Blog Post
 
 on:
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
+  # Runs on issues that are opened or labeled
   issues:
     types: [opened, labeled]
 
@@ -47,8 +51,6 @@ jobs:
           ---
           title: "${TITLE}"
           date: ${POST_DATE}
-          issue: ${github.event.issue.number}
-          author: ${github.event.issue.user.login}
           ---
 
           ${{ github.event.issue.body }}
@@ -62,41 +64,7 @@ jobs:
           git config --global user.email 'action@github.com'
           git add _posts/
           git diff --quiet && git diff --staged --quiet || (git commit -m "Add blog post from issue #${{ github.event.issue.number }}" && git push)
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
-          cache-version: 0
-
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-
-      - name: Build with Jekyll
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: production
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: process-issue
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      - name: Checkout for issue update
-        uses: actions/checkout@v4
-
+      
       - name: Comment, label, and close issue
         uses: actions/github-script@v6
         with:
@@ -110,7 +78,7 @@ jobs:
               issue_number,
               owner,
               repo,
-              body: `Blog post created and deployed successfully! View at: ${{ steps.deployment.outputs.page_url }}`
+              body: `Blog post created`
             });
 
             // Add 'resolved' label
@@ -128,3 +96,31 @@ jobs:
               repo,
               state: 'closed'
             });
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: process-issue
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
