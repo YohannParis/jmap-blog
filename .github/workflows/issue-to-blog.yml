@@ -1,6 +1,7 @@
 name: Convert Issue to Blog Post
 
 on:
+  workflow_dispatch:
   issues:
     types: [opened, labeled]
 
