@@ -66,17 +66,10 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const issue_number = context.issue.number;
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-
-            await github.rest.issues.createComment({
-              issue_number,owner, repo,
-              body: `Blog post created`
-            });
-            
             await github.rest.issues.update({
-              issue_number,owner, repo,
+              context.issue.number,
+              context.repo.owner, 
+              context.repo.repo,
               state: 'closed'
             });
   
