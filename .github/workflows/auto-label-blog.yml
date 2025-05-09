@@ -7,8 +7,6 @@ on:
 jobs:
   label-issue:
     runs-on: ubuntu-latest
-    # Only label issues created by email from your address
-    if: github.event.issue.user.login == 'github-actions[bot]' && contains(github.event.issue.body, 'From: contact@yohannparis.com')
     steps:
       - uses: actions/github-script@v6
         with:
