@@ -5,6 +5,7 @@ labels: ["blog-post"]
 body:
   - type: textarea
     id: content
-    label: Poem
+    attributes:
+      label: Poem
     validations:
       required: true
