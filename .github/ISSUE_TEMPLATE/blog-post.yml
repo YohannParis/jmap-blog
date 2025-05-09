@@ -1,10 +1,10 @@
 name: Blog Post
 description: Create a new blog post
-title: ""
+title: "Title"
 labels: ["blog-post"]
 body:
-  - type: markdown
   - type: textarea
     id: content
+    label: Poem
     validations:
       required: true
