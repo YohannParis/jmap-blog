@@ -1,0 +1,94 @@
+name: Convert Issue to Blog Post
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  process-issue:
+    runs-on: ubuntu-latest
+    # Only trigger on issues with blog-post label
+    if: contains(github.event.issue.labels.*.name, 'blog-post')
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Create markdown file
+        run: |
+          # Format date
+          POST_DATE=$(date +%Y-%m-%d)
+          
+          # Clean title and create slug
+          TITLE="${{ github.event.issue.title }}"
+          POST_SLUG=$(echo "${TITLE}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//' | sed 's/-$//')
+          
+          # Ensure directory exists
+          mkdir -p content/posts
+          
+          # Define file path
+          POST_PATH="content/posts/${POST_DATE}-${POST_SLUG}.md"
+          
+          # Create markdown file with frontmatter
+          cat > "${POST_PATH}" << EOF
+          ---
+          title: "${TITLE}"
+          date: ${POST_DATE}
+          issue: ${github.event.issue.number}
+          author: ${github.event.issue.user.login}
+          ---
+          
+          ${{ github.event.issue.body }}
+          EOF
+          
+          echo "Created post at ${POST_PATH}"
+      
+      - name: Commit and push
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add content/posts/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Add blog post from issue #${{ github.event.issue.number }}" && git push)
+      
+      - name: Build site
+        run: |
+          # Add your static site generator build commands here
+          # For example, if using Hugo:
+          # npm install
+          # npm run build
+      
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+      
+      - name: Comment, label, and close issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.issue.number;
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            
+            // Add comment
+            await github.rest.issues.createComment({
+              issue_number,
+              owner,
+              repo,
+              body: 'Blog post created successfully!'
+            });
+            
+            // Add 'resolved' label
+            await github.rest.issues.addLabels({
+              issue_number,
+              owner,
+              repo,
+              labels: ['resolved']
+            });
+            
+            // Close the issue
+            await github.rest.issues.update({
+              issue_number,
+              owner,
+              repo,
+              state: 'closed'
+            });
