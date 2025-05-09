@@ -1,18 +1,10 @@
 name: Blog Post
 description: Create a new blog post
-title: "[New Post] "
+title: ""
 labels: ["blog-post"]
 body:
   - type: markdown
-    attributes:
-      value: |
-        ## Blog Post Details
-        Enter the content for your new blog post.
   - type: textarea
     id: content
-    attributes:
-      label: Post Content
-      description: Write your post content in Markdown
-      placeholder: Your blog post content goes here...
     validations:
       required: true
