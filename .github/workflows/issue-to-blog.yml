@@ -3,7 +3,7 @@ name: Publish latest issue
 on:
   workflow_dispatch:
   issues:
-    types: [opened, labeled]
+    types: [labeled]
 
 permissions:
   id-token: write
