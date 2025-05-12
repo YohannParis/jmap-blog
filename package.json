@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "npx @11ty/eleventy --pathprefix=/poem-blog/"
+    "build": "node blog-generator.js"
   },
   "keywords": [],
   "author": "",

@@ -1,9 +1,9 @@
-const KitCompiler = require('./compiler');
-const { tokenizeString } = require('./tokenizer');
+import KitCompiler from './compiler.js';
+import { tokenizeString } from './tokenizer.js';
 
 /**
  * Compiles a Kit file and writes the output to the specified path.
- * 
+ *
  * @param {string} inputPath - Path to the input Kit file
  * @param {string} outputPath - Path where the compiled file should be written
  * @param {Object} options - Compilation options
@@ -57,7 +57,7 @@ async function compileString(content, basePath, options = {}) {
   }
 }
 
-module.exports = {
+export {
   compile,
   compileString,
   KitCompiler,

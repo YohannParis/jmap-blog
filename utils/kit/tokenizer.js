@@ -41,6 +41,6 @@ function tokenizeString(inputString) {
   return result;
 }
 
-module.exports = {
+export {
   tokenizeString
 };

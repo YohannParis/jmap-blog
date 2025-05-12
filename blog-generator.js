@@ -1,6 +1,10 @@
-const fs = require('fs-extra');
-const path = require('path');
-const kit = require('./utils/kit');
+import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import * as kit from './utils/kit/index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * Blog Post Generator using Kit language
@@ -131,7 +135,7 @@ async function generateIndexPage(posts) {
   });
   
   // Create the content with variable
-  let content = `<!--$postList\n${postListHtml}-->\n`;
+  let content = `<!--$postList ${postListHtml}-->\n`;
   content += `<!-- @import ../templates/index.kit -->`;
   
   // Write the temporary file

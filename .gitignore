@@ -16,18 +16,9 @@ yarn-debug.log
 .idea_modules/
 out/
 
-# 11ty
-_site/
-.cache/
-.eleventy-cache/
-dist/
-
 # Environment
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+build/
 
 # OS generated files
 .DS_Store
@@ -41,3 +32,4 @@ Thumbs.db
 # Logs
 logs/
 *.log
+**/.claude/settings.local.json

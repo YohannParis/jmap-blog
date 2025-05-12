@@ -1,6 +1,6 @@
-const fs = require('fs-extra');
-const path = require('path');
-const { tokenizeString } = require('./tokenizer');
+import fs from 'fs-extra';
+import path from 'path';
+import { tokenizeString } from './tokenizer.js';
 
 /**
  * KitCompiler class
@@ -155,7 +155,29 @@ class KitCompiler {
         }
         
         // Process the keyword
-        if (keyword.toLowerCase() === '@import' || keyword.toLowerCase() === '@include') {
+        if (keyword.toLowerCase() === '@import-partial') {
+          // Handle variable import
+          if (!variablesDict) {
+            result.resultMessage = `Line ${lineCount} of ${fileName}: Missing variables dictionary for import-partial.`;
+            return result;
+          }
+
+          const variableName = predicate.trim();
+          if (!variablesDict[variableName]) {
+            result.resultMessage = `Line ${lineCount} of ${fileName}: The variable ${variableName} is undefined.`;
+            return result;
+          }
+
+          const importPath = path.join(process.cwd(), 'posts', variablesDict[variableName]);
+
+          try {
+            const content = await fs.readFile(importPath, 'utf8');
+            compiledCode += content;
+          } catch (error) {
+            result.resultMessage = `Line ${lineCount} in ${fileName}: Cannot read file ${importPath}: ${error.message}`;
+            return result;
+          }
+        } else if (keyword.toLowerCase() === '@import' || keyword.toLowerCase() === '@include') {
           // Handle import
           if (!predicate) {
             result.resultMessage = `Line ${lineCount} of ${fileName}: Missing a filepath after the import/include keyword in this Kit comment: ${specialCommentString}`;
@@ -456,4 +478,4 @@ class KitCompiler {
   }
 }
 
-module.exports = KitCompiler;
+export default KitCompiler;
