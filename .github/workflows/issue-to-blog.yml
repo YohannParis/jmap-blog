@@ -1,4 +1,4 @@
-name: Convert Issue to Blog Post
+name: Publish latest issue
 
 on:
   workflow_dispatch:
@@ -6,8 +6,6 @@ on:
     types: [opened, labeled]
 
 permissions:
-  contents: write
-  pages: write
   id-token: write
   issues: write
 
@@ -17,6 +15,7 @@ concurrency:
 
 jobs:
   process-issue:
+    name: Convert the Issue to Blog Post
     runs-on: ubuntu-latest
     if: contains(github.event.issue.labels.*.name, 'blog-post')
     steps:
@@ -74,36 +73,6 @@ jobs:
   
 
   build:
-    environment:
-      name: github-pages
-      url:
-        ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     needs: process-issue
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Persist npm cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
-      - name: Persist Eleventy .cache
-        uses: actions/cache@v4
-        with:
-          path: ./.cache
-          key: ${{ runner.os }}-eleventy-fetch-cache
-      - name: Build with 11ty
-        run: |
-          npm install
-          npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./_site
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-        
+    name: Build and Deploy
+    uses: ./.github/workflows/build-and-deploy.yml
