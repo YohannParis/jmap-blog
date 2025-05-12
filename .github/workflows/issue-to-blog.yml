@@ -39,12 +39,12 @@ jobs:
           CLEAN_BODY=$(echo "$BODY" | sed 's/### Poem//g' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | sed '/^$/d')
 
           # Create kit file with HTML structure
-          cat > "${POST_PATH}" << EOF
-<h1>${TITLE}</h1>
-<article>
-$(echo "$CLEAN_BODY" | sed 's/^/  /')
-</article>
-EOF
+          cat > "${POST_PATH}" << EOL
+          <h1>${TITLE}</h1>
+          <article>
+          $(echo "$CLEAN_BODY" | sed 's/^/  /')
+          </article>
+          EOL
 
           echo "Created post at ${POST_PATH}"
 
