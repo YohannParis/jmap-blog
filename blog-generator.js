@@ -14,9 +14,14 @@ const __dirname = path.dirname(__filename);
  */
 async function generateBlog() {
   try {
-    // Create output directory if it doesn't exist
-    await fs.ensureDir('build');
-    
+    // Create output directory if it doesn't exist (or clean it if it exists)
+    if (await fs.pathExists('build')) {
+      console.log('Cleaning build directory...');
+      await fs.emptyDir('build');
+    } else {
+      await fs.ensureDir('build');
+    }
+
     // Ensure templates directory exists
     const templatesDir = path.join(__dirname, 'templates');
     if (!await fs.pathExists(templatesDir)) {
@@ -99,14 +104,18 @@ async function generatePostPages(posts) {
     // Write the temporary file
     await fs.writeFile(tempPostKit, content, 'utf8');
     
-    // Compile the post
-    const outputPath = path.join(__dirname, 'build', `${post.slug}.html`);
+    // Create a directory for the post (for clean URLs)
+    const postDir = path.join(__dirname, 'build', post.slug);
+    await fs.ensureDir(postDir);
+
+    // Compile the post to index.html inside the post directory
+    const outputPath = path.join(postDir, 'index.html');
     const result = await kit.compile(tempPostKit, outputPath);
     
     if (result.successful) {
-      console.log(`Generated post: ${post.slug}.html`);
+      console.log(`Generated post: ${post.slug}/`);
     } else {
-      console.error(`Error generating ${post.slug}.html: ${result.resultMessage}`);
+      console.error(`Error generating ${post.slug}/: ${result.resultMessage}`);
     }
   }
   
@@ -129,7 +138,7 @@ async function generateIndexPage(posts) {
   posts.forEach(post => {
     const dateStr = post.date.toISOString().split('T')[0];
     postListHtml += `<li class="post-item">
-        <h2><a href="${post.slug}.html">${post.title}</a></h2>
+        <h2><a href="${post.slug}/">${post.title}</a></h2>
         <div class="post-date">${dateStr}</div>
       </li>\n`;
   });
