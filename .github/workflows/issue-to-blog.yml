@@ -11,10 +11,6 @@ permissions:
   id-token: write
   issues: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   process-issue:
     name: Convert the Issue to Blog Post
