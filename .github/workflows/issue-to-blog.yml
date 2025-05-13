@@ -71,7 +71,5 @@ jobs:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Wait a moment for the commit to be available
-        run: sleep 10
       - name: Trigger build and deploy
         uses: ./.github/workflows/build-and-deploy.yml

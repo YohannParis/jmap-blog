@@ -17,6 +17,8 @@ jobs:
         ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Wait a moment for the commit to be available
+        run: sleep 10
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
