@@ -93,9 +93,7 @@ const compiler = new KitCompiler({
   frameworkFolders: ["/path/to/frameworks"],
 });
 
-compiler
-  .compile("/path/to/input.kit", "/path/to/output.html")
-  .then((result) => {
-    console.log(result);
-  });
+compiler.compile("/path/to/input.kit", "/path/to/output.html").then((result) => {
+  console.log(result);
+});
 ```

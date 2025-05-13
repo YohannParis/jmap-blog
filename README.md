@@ -44,10 +44,7 @@ For poems with line breaks, simply write each line separately within the article
 
 ```html
 <h1>My Poem</h1>
-<article>
-  Line one of the poem, Line two with a different thought, Line three concludes
-  it.
-</article>
+<article>Line one of the poem, Line two with a different thought, Line three concludes it.</article>
 ```
 
 The system will automatically add `<br>` tags to preserve line breaks in poems.
