@@ -10,6 +10,7 @@ permissions:
   pages: write
   id-token: write
   issues: write
+  actions: write
 
 jobs:
   process-issue:
