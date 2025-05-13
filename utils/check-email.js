@@ -18,7 +18,7 @@ const imap = new Imap({
 });
 
 // GitHub setup
-const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+const octokit = new Octokit({ auth: process.env.PAT_TOKEN });
 const owner = process.env.GITHUB_REPO_OWNER;
 const repo = process.env.GITHUB_REPO_NAME;
 
