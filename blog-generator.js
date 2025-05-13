@@ -140,9 +140,7 @@ async function generateIndexPage(posts) {
   // Generate the post-list HTML
   let postListHtml = "";
   posts.forEach((post) => {
-    postListHtml += `<li class="post-item">
-        <h2><a href="${post.slug}/">${post.title}</a></h2>
-      </li>\n`;
+    postListHtml += `<h2><a href="${post.slug}/">${post.title}</a></h2>\n`;
   });
 
   // Create the content with a variable
