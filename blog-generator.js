@@ -9,12 +9,12 @@ const __dirname = path.dirname(__filename);
 /**
  * Blog Post Generator using Kit language
  * Reads .kit files from posts/ directory and generates:
- * 1. Individual HTML pages for each post using a template
+ * 1. Individual HTML pages for each post using template
  * 2. An index.html with links to all posts
  */
 async function generateBlog() {
   try {
-    // Create output directory if it doesn't exist (or clean it if it exists)
+    // Create an output directory if it doesn't exist (or clean it if it exists)
     if (await fs.pathExists('build')) {
       console.log('Cleaning build directory...');
       await fs.emptyDir('build');
@@ -29,9 +29,9 @@ async function generateBlog() {
       return;
     }
     
-    // Get all .kit files from posts directory
+    // Get all .kit files from the posts directory
     const postsDir = path.join(__dirname, 'posts');
-    await fs.ensureDir(postsDir); // Ensure posts directory exists
+    await fs.ensureDir(postsDir); // Ensure the posts directory exists
     
     const postFiles = await fs.readdir(postsDir);
     const kitFiles = postFiles.filter(file => 
@@ -50,7 +50,7 @@ async function generateBlog() {
       const inputPath = path.join(postsDir, kitFile);
       const postSlug = path.basename(kitFile, '.kit');
       
-      // Read the post content to extract title
+      // Read the post content to extract the title
       const postContent = await fs.readFile(inputPath, 'utf8');
       const titleMatch = postContent.match(/<h1[^>]*>(.*?)<\/h1>/i);
       const title = titleMatch && titleMatch[1] ? titleMatch[1].trim() : postSlug;
@@ -133,17 +133,15 @@ async function generateIndexPage(posts) {
   // Create a temporary index Kit file
   const tempIndexKit = path.join(tempDir, 'index_temp.kit');
   
-  // Generate the post list HTML
+  // Generate the post-list HTML
   let postListHtml = '';
   posts.forEach(post => {
-    const dateStr = post.date.toISOString().split('T')[0];
     postListHtml += `<li class="post-item">
         <h2><a href="${post.slug}/">${post.title}</a></h2>
-        <div class="post-date">${dateStr}</div>
       </li>\n`;
   });
   
-  // Create the content with variable
+  // Create the content with a variable
   let content = `<!--$postList ${postListHtml}-->\n`;
   content += `<!-- @import ../templates/index.kit -->`;
   
