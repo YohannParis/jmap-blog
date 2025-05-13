@@ -50,13 +50,8 @@ imap.once('ready', function() {
               return;
             }
 
-            const title = mail.subject;
-            const content = mail.text || mail.html;
-
-            if (!title || !content) {
-              console.log('Missing title or content');
-              return;
-            }
+            const title = mail.subject || 'Untitled';
+            const body = mail.text || mail.html || 'No content';
 
             try {
               // Create a new GitHub issue with label 'blog-post'
@@ -64,7 +59,7 @@ imap.once('ready', function() {
                 owner,
                 repo,
                 title,
-                body: content,
+                body,
                 labels: ['blog-post']
               });
 
