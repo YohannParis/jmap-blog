@@ -40,7 +40,7 @@ jobs:
           cat > "${POST_PATH}" << EOL
           <h1>${TITLE}</h1>
           <article>
-          $(echo "$CLEAN_BODY" | sed 's/^/  /')
+          $(echo "$CLEAN_BODY" | sed 's/$/&<br>/' | sed 's/^/  /')
           </article>
           EOL
 

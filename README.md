@@ -11,6 +11,7 @@ This example demonstrates how to create a simple static blog generator using the
 - Creates an `index.html` with links to all posts, sorted by date
 - Extracts post titles from H1 tags
 - Automatically includes shared components and styles
+- Preserves line breaks in poems by automatically adding `<br>` tags
 
 ## Project Structure
 
@@ -60,6 +61,19 @@ Create post files in the `posts/` directory. Each post should only contain the t
   </ul>
 </article>
 ```
+
+For poems with line breaks, simply write each line separately within the article tag:
+
+```html
+<h1>My Poem</h1>
+<article>
+  Line one of the poem,
+  Line two with a different thought,
+  Line three concludes it.
+</article>
+```
+
+The system will automatically add `<br>` tags to preserve line breaks in poems.
 
 ### 3. Set Up Templates
 
