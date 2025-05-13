@@ -69,17 +69,9 @@ jobs:
   build:
     needs: process-issue
     name: Build and Deploy
-    # Wait a moment for the commit to be available
     runs-on: ubuntu-latest
     steps:
-      - run: sleep 10
+      - name: Wait a moment for the commit to be available
+        run: sleep 10
       - name: Trigger build and deploy
-        uses: actions/github-script@v6
-        with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'build-and-deploy.yml',
-              ref: 'main'
-            });
+        uses: ./.github/workflows/build-and-deploy.yml
