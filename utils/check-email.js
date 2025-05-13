@@ -1,5 +1,5 @@
 import Imap from "imap";
-import simpleParser from "simple-mail-parser";
+import { simpleParser } from "mailparser";
 import { Octokit } from "@octokit/rest";
 import dotenv from "dotenv";
 
@@ -22,12 +22,12 @@ const octokit = new Octokit({ auth: process.env.PAT_TOKEN });
 const owner = process.env.GITHUB_REPO_OWNER;
 const repo = process.env.GITHUB_REPO_NAME;
 
-function openInbox(cb) {
-	imap.openBox("INBOX", false, cb);
+function openMailbox(cb) {
+	imap.openBox("Archive/Poems", false, cb);
 }
 
 imap.once("ready", function () {
-	openInbox(function (err, box) {
+	openMailbox(function (err, box) {
 		if (err) throw err;
 
 		// Search for unread emails
@@ -40,9 +40,19 @@ imap.once("ready", function () {
 				return;
 			}
 
-			const fetch = imap.fetch(results, { bodies: "" });
+			const fetch = imap.fetch(results, { bodies: "", markSeen: false });
 
-			fetch.on("message", function (msg) {
+			// Keep track of emails that were successfully processed
+			const processedEmails = [];
+
+			fetch.on("message", function (msg, seqno) {
+				let uid;
+				
+				// Get the UID of the message
+				msg.once('attributes', function(attrs) {
+					uid = attrs.uid;
+				});
+				
 				msg.on("body", function (stream) {
 					simpleParser(stream, async (err, mail) => {
 						if (err) {
@@ -64,6 +74,9 @@ imap.once("ready", function () {
 							});
 
 							console.log(`Created issue: ${response.data.html_url}`);
+							
+							// Add this email to the list of successfully processed emails
+							if (uid) processedEmails.push(uid);
 						} catch (error) {
 							console.error("Failed to create issue:", error);
 						}
@@ -73,7 +86,21 @@ imap.once("ready", function () {
 
 			fetch.once("end", function () {
 				console.log("Done fetching emails");
-				imap.end();
+				
+				// Mark successfully processed emails as seen
+				if (processedEmails.length > 0) {
+					const uidBatch = processedEmails.join(',');
+					imap.addFlags(uidBatch, '\\Seen', (err) => {
+						if (err) {
+							console.error('Error marking emails as read:', err);
+						} else {
+							console.log(`Marked ${processedEmails.length} emails as read`);
+						}
+						imap.end();
+					});
+				} else {
+					imap.end();
+				}
 			});
 		});
 	});

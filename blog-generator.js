@@ -67,7 +67,7 @@ async function generateBlog() {
 		}
 
 		// Sort posts by date (newest first)
-		postMetadata.sort((a, b) => b.date - a.date);
+		postMetadata.sort((a, b) => a.date - b.date);
 
 		// Generate individual post pages using the template
 		await generatePostPages(postMetadata);

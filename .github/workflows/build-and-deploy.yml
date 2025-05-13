@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Wait a moment for the commit to be available
-        run: sleep 10
+        run: sleep 100
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
