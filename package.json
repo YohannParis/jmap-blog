@@ -5,7 +5,7 @@
   "scripts": {
     "build": "node blog-generator.js",
     "check-email": "npm install imap simple-mail-parser @octokit/rest dotenv && node utils/check-email.js",
-    "format": "npx prettier --write .  && npx prettier \"./**/*.kit\" --write --parser html"
+    "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html"
   },
   "keywords": [],
   "author": "",
