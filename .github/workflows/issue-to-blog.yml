@@ -54,7 +54,7 @@ jobs:
           git config --global user.email 'action@github.com'
           git add posts/
           git diff --quiet && git diff --staged --quiet || (git commit -m "Add blog post from issue #${{ github.event.issue.number }}" && git push)
-      
+
       - name: Comment, label, and close issue
         uses: actions/github-script@v6
         with:

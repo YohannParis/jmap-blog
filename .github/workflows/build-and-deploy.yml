@@ -13,8 +13,7 @@ jobs:
   build:
     environment:
       name: github-pages
-      url:
-        ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Wait a moment for the commit to be available
@@ -39,4 +38,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        

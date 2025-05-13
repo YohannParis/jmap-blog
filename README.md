@@ -62,6 +62,7 @@ node blog-generator.js
 ```
 
 This will:
+
 1. Read all content files from the `posts/` directory
 2. Extract metadata like titles from the H1 tags
 3. Use the post template to generate individual HTML files
@@ -72,6 +73,7 @@ This will:
 The blog generator uses a two-step process:
 
 1. **Metadata Extraction**:
+
    - Scans the posts directory for .kit files
    - Extracts the title from the H1 tag
    - Gathers file metadata like dates

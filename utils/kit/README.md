@@ -12,27 +12,27 @@ Kit is a simple HTML templating language that adds two primary features:
 ## Usage
 
 ```javascript
-const kit = require('./utils/kit');
+const kit = require("./utils/kit");
 
 // Compile a Kit file to HTML
-kit.compile('/path/to/input.kit', '/path/to/output.html')
-  .then(result => {
-    if (result.successful) {
-      console.log('Compilation successful!');
-    } else {
-      console.error('Error:', result.resultMessage);
-    }
-  });
+kit.compile("/path/to/input.kit", "/path/to/output.html").then((result) => {
+  if (result.successful) {
+    console.log("Compilation successful!");
+  } else {
+    console.error("Error:", result.resultMessage);
+  }
+});
 ```
 
 ### Options
 
 ```javascript
 // With additional options
-kit.compile('/path/to/input.kit', '/path/to/output.html', {
-  frameworkFolders: ['/path/to/framework/templates']
-})
-  .then(result => {
+kit
+  .compile("/path/to/input.kit", "/path/to/output.html", {
+    frameworkFolders: ["/path/to/framework/templates"],
+  })
+  .then((result) => {
     console.log(result);
   });
 ```
@@ -45,9 +45,7 @@ Include other files:
 
 ```html
 <!-- @import header.kit -->
-<div class="content">
-  Main content goes here
-</div>
+<div class="content">Main content goes here</div>
 <!-- @import footer.html -->
 ```
 
@@ -59,12 +57,12 @@ Define and use variables:
 <!--$title My Awesome Page-->
 <!DOCTYPE html>
 <html>
-<head>
-  <title><!--$title--></title>
-</head>
-<body>
-  <h1><!--$title--></h1>
-</body>
+  <head>
+    <title><!--$title--></title>
+  </head>
+  <body>
+    <h1><!--$title--></h1>
+  </body>
 </html>
 ```
 
@@ -80,6 +78,7 @@ Compiles a Kit file and writes the output to the specified path.
   - `frameworkFolders`: Array of paths to look for imported files
 
 Returns a Promise that resolves to an object with:
+
 - `successful`: Boolean indicating success
 - `resultMessage`: Message describing the result
 - `outputPath`: Path to the output file (if successful)
@@ -89,13 +88,14 @@ Returns a Promise that resolves to an object with:
 The main compiler class that can be instantiated directly:
 
 ```javascript
-const { KitCompiler } = require('./utils/kit');
+const { KitCompiler } = require("./utils/kit");
 const compiler = new KitCompiler({
-  frameworkFolders: ['/path/to/frameworks']
+  frameworkFolders: ["/path/to/frameworks"],
 });
 
-compiler.compile('/path/to/input.kit', '/path/to/output.html')
-  .then(result => {
+compiler
+  .compile("/path/to/input.kit", "/path/to/output.html")
+  .then((result) => {
     console.log(result);
   });
 ```

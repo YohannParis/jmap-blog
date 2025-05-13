@@ -1,5 +1,5 @@
-import KitCompiler from './compiler.js';
-import { tokenizeString } from './tokenizer.js';
+import KitCompiler from "./compiler.js";
+import { tokenizeString } from "./tokenizer.js";
 
 /**
  * Compiles a Kit file and writes the output to the specified path.
@@ -16,7 +16,7 @@ async function compile(inputPath, outputPath, options = {}) {
 
 /**
  * Compiles a Kit string and returns the result.
- * 
+ *
  * @param {string} content - The Kit content to compile
  * @param {string} basePath - Base path for resolving imports
  * @param {Object} options - Compilation options
@@ -26,30 +26,30 @@ async function compileString(content, basePath, options = {}) {
   const compiler = new KitCompiler(options);
   const result = {
     successful: false,
-    resultMessage: '',
-    compiledCode: ''
+    resultMessage: "",
+    compiledCode: "",
   };
-  
+
   try {
     const comps = tokenizeString(content);
     if (!comps) {
-      result.resultMessage = 'Failed to tokenize content.';
+      result.resultMessage = "Failed to tokenize content.";
       return result;
     }
-    
+
     // Create a temporary variable dictionary
     const variablesDict = {};
-    
+
     // Process the tokens similar to recursivelyCompileKitFile
     // This is simplified and would need to be expanded for full functionality
-    let compiledCode = '';
+    let compiledCode = "";
     for (const comp of comps) {
       compiledCode += comp;
     }
-    
+
     result.compiledCode = compiledCode;
     result.successful = true;
-    result.resultMessage = 'Compiled successfully.';
+    result.resultMessage = "Compiled successfully.";
     return result;
   } catch (error) {
     result.resultMessage = `Error compiling string: ${error.message}`;
@@ -57,9 +57,4 @@ async function compileString(content, basePath, options = {}) {
   }
 }
 
-export {
-  compile,
-  compileString,
-  KitCompiler,
-  tokenizeString
-};
+export { compile, compileString, KitCompiler, tokenizeString };
