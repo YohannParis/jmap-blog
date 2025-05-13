@@ -59,9 +59,9 @@ async function generateBlog() {
       const title =
         titleMatch && titleMatch[1] ? titleMatch[1].trim() : postSlug;
 
-      // Get the file's creation date for sorting
+      // Get the file's modification date for more reliable sorting
       const stats = await fs.stat(inputPath);
-      const date = new Date(stats.birthtime);
+      const date = new Date(stats.mtime); // Use modification time instead of birthtime
 
       // Add to metadata
       postMetadata.push({
