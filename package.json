@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "node blog-generator.js"
+    "build": "node blog-generator.js",
+    "check-email": "npm install imap simple-mail-parser @octokit/rest dotenv && node utils/check-email.js"
   },
   "keywords": [],
   "author": "",

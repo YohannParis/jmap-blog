@@ -1,6 +1,11 @@
-const Imap = require('imap');
-const simpleParser = require('simple-mail-parser');
-const { Octokit } = require('@octokit/rest');
+import Imap from 'imap';
+import simpleParser from 'simple-mail-parser';
+import { Octokit } from '@octokit/rest';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file if running locally
+// This won't override existing environment variables from GitHub Actions
+dotenv.config();
 
 // IMAP configuration from GitHub secrets
 const imap = new Imap({
@@ -13,10 +18,7 @@ const imap = new Imap({
 });
 
 // GitHub setup
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN
-});
-
+const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 const owner = process.env.GITHUB_REPO_OWNER;
 const repo = process.env.GITHUB_REPO_NAME;
 
@@ -27,19 +29,19 @@ function openInbox(cb) {
 imap.once('ready', function() {
   openInbox(function(err, box) {
     if (err) throw err;
-    
+
     // Search for unread emails
     imap.search(['UNSEEN'], function(err, results) {
       if (err) throw err;
-      
+
       if (!results || !results.length) {
         console.log('No new emails');
         imap.end();
         return;
       }
-      
+
       const fetch = imap.fetch(results, { bodies: '' });
-      
+
       fetch.on('message', function(msg) {
         msg.on('body', function(stream) {
           simpleParser(stream, async (err, mail) => {
@@ -47,15 +49,15 @@ imap.once('ready', function() {
               console.error(err);
               return;
             }
-            
+
             const title = mail.subject;
             const content = mail.text || mail.html;
-            
+
             if (!title || !content) {
               console.log('Missing title or content');
               return;
             }
-            
+
             try {
               // Create a new GitHub issue with label 'blog-post'
               const response = await octokit.rest.issues.create({
@@ -65,7 +67,7 @@ imap.once('ready', function() {
                 body: content,
                 labels: ['blog-post']
               });
-              
+
               console.log(`Created issue: ${response.data.html_url}`);
             } catch (error) {
               console.error('Failed to create issue:', error);
@@ -73,7 +75,7 @@ imap.once('ready', function() {
           });
         });
       });
-      
+
       fetch.once('end', function() {
         console.log('Done fetching emails');
         imap.end();
