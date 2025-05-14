@@ -3,6 +3,8 @@ import Imap from "imap";
 import { simpleParser } from "mailparser";
 import { Octokit } from "@octokit/rest";
 
+dotenv.config();
+
 // GitHub setup
 const octokit = new Octokit({ auth: process.env.PAT_TOKEN });
 const owner = process.env.GITHUB_REPO_OWNER;
@@ -161,7 +163,6 @@ function isReady() {
 	imap.openBox("Archive/Poems", true, onMailbox);
 }
 
-dotenv.config();
 const imap = new Imap({
 	user: process.env.EMAIL_USER,
 	password: process.env.EMAIL_PASSWORD,
