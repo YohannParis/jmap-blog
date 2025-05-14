@@ -9,6 +9,7 @@ jobs:
   check-email:
     name: Check new emails and convert them to issues
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
