@@ -8,11 +8,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // IMAP configuration from GitHub secrets
+console.log("Attempting to connect with:", {
+	user: process.env.EMAIL_USER,
+	host: process.env.EMAIL_HOST,
+	port: process.env.EMAIL_PORT
+});
+
 const imap = new Imap({
 	user: process.env.EMAIL_USER,
 	password: process.env.EMAIL_PASSWORD,
 	host: process.env.EMAIL_HOST,
-	port: process.env.EMAIL_PORT,
+	port: parseInt(process.env.EMAIL_PORT) || 993, // Ensure port is a number
 	tls: true,
 	tlsOptions: { rejectUnauthorized: false },
 });
