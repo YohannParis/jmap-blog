@@ -10,6 +10,9 @@ jobs:
     name: Check new emails and convert them to issues
     runs-on: ubuntu-latest
     environment: github-pages
+    permissions:
+      id-token: write
+      issues: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
