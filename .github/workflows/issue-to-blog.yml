@@ -70,4 +70,5 @@ jobs:
     uses: ./.github/workflows/build-and-deploy.yml
     permissions:
       contents: write
+      pages: write
       id-token: write

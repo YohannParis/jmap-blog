@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node index.js",
-    "check-email": "node utils/check-email.js",
+    "fetch-email": "node utils/fetch-email.js",
     "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html"
   },
   "keywords": [],

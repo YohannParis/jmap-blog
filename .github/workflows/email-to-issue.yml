@@ -6,7 +6,7 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  check-email:
+  fetch-email:
     name: Check new emails and convert them to issues
     runs-on: ubuntu-latest
     environment: github-pages
@@ -21,9 +21,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
-      - name: Run check-email script
+      - name: Run fetch-email script
         env:
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
@@ -34,4 +34,4 @@ jobs:
           GITHUB_REPO_OWNER: ${{ github.repository_owner }}
         run: |
           npm install
-          npm run check-email
+          npm run fetch-email
