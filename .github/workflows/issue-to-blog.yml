@@ -5,22 +5,20 @@ on:
   issues:
     types: [labeled]
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-  issues: write
-  actions: write
-
 jobs:
   process-issue:
     name: Convert the Issue to Blog Post
-    runs-on: ubuntu-latest
     if: contains(github.event.issue.labels.*.name, 'blog-post')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Create Kit file
+
+      - name: Create post from the issue
         run: |
           # Clean title and create slug
           TITLE="${{ github.event.issue.title }}"
@@ -68,5 +66,5 @@ jobs:
 
   build:
     needs: process-issue
-    name: Build and Deploy
+    name: Build and deploy the blog
     uses: ./.github/workflows/build-and-deploy.yml

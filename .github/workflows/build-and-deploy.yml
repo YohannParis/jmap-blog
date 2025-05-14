@@ -4,37 +4,45 @@ on:
   workflow_dispatch:
   workflow_call:
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
-
 jobs:
   build:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    name: Create blog static files
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
-      - name: Wait a moment for the commit to be available
-        run: sleep 100
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Persist npm cache
-        uses: actions/cache@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
-      - name: Build with custom blog generator
+          node-version: 20
+          cache: 'npm'
+
+      - name: Build static files
         run: |
           npm install
           npm run build
-      - name: Upload artifact
+
+      - name: Upload static files as artifact
+        id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./build
+
+  deploy:
+    needs: build
+    name: Deploy blog to GitHub pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "node blog-generator.js",
+    "build": "node index.js",
     "check-email": "node utils/check-email.js",
     "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT License",
   "description": "",
   "type": "module",
   "dependencies": {
