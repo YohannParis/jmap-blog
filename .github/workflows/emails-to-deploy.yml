@@ -1,0 +1,57 @@
+name: Fetch emails and Deploy
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 14,16,18,20,22,0,2 * * *"
+
+jobs:
+  build:
+    name: Check new emails and convert them to markdown
+    runs-on: ubuntu-latest
+    environment: github-pages
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup NPM
+        run: npm install
+
+      - name: Run fetch-email script
+        env:
+          JMAP_TOKEN: ${{ secrets.JMAP_TOKEN }}
+        run: npm run fetch-email
+
+      - name: Build static files
+        run: npm run build
+
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
+
+  deploy:
+    needs: build
+    name: Deploy blog to GitHub pages
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
