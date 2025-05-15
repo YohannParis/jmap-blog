@@ -55,21 +55,6 @@ function createSlug(title) {
 		.trim();
 }
 
-/**
- * Loads the existing posts from posts.json, or returns an empty array if the file doesn't exist
- * @returns {Promise<Array>} Array of posts
- */
-async function loadExistingPosts() {
-	try {
-		if (await fs.pathExists(postsJsonPath)) {
-			const postsData = await fs.readFile(postsJsonPath, "utf8");
-			return JSON.parse(postsData);
-		}
-	} catch (error) {
-		console.error("Error reading posts.json:", error.message);
-	}
-	return [];
-}
 
 /**
  * Saves posts data to posts.json
@@ -182,19 +167,13 @@ export async function fetchEmails() {
 	const emails = emails_data["methodResponses"][1][1]["list"];
 	console.log(`Found ${emails.length} emails in the mailbox`);
 
-	// Filter emails that don't have the $seen keyword
-	const unseenEmails = emails.filter((email) => {
-		// Check if the email has keywords and if $seen is NOT among them
-		return !email.keywords || !email.keywords["$seen"];
-	});
+	console.log(`Processing ${emails.length} emails in the mailbox`);
 
-	console.log(`Processing ${unseenEmails.length} unseen emails`);
+	// Create a new array to store all posts
+	const allPosts = [];
 
-	// Load existing posts
-	const existingPosts = await loadExistingPosts();
-
-	// Process new emails
-	for (const email of unseenEmails) {
+	// Process all emails
+	for (const email of emails) {
 		const email_id = email.id;
 		const title = email.subject;
 		const date = email.receivedAt;
@@ -221,7 +200,7 @@ export async function fetchEmails() {
 		// Format the body with proper markdown line breaks
 		const formattedBody = addLineBreaks(body);
 
-		// Create a post object
+		// Create a post object and add it to allPosts
 		const post = {
 			title,
 			date: formattedDate,
@@ -229,15 +208,9 @@ export async function fetchEmails() {
 			slug,
 		};
 
-		// Check if post already exists (by slug), and update it if it does, otherwise add it
-		const existingPostIndex = existingPosts.findIndex((p) => p.slug === slug);
-		if (existingPostIndex >= 0) {
-			existingPosts[existingPostIndex] = post;
-			console.log(`Updated existing post: ${slug}`);
-		} else {
-			existingPosts.push(post);
-			console.log(`Added new post: ${slug}`);
-		}
+		// Add the post to our collection
+		allPosts.push(post);
+		console.log(`Added post: ${slug}`);
 
 		// Mark email as read
 		const seen_response = await fetch(api_url, {
@@ -271,13 +244,12 @@ export async function fetchEmails() {
 		console.log("———\n");
 	}
 
-	// Save updated posts
-	await savePosts(existingPosts);
+	// Save all posts to posts.json
+	await savePosts(allPosts);
 
 	return {
 		totalEmails: emails.length,
-		processedEmails: unseenEmails.length,
-		totalPosts: existingPosts.length,
+		totalPosts: allPosts.length
 	};
 }
 
