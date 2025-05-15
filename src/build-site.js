@@ -141,18 +141,7 @@ async function generateIndexPage(posts) {
 		const tempIndexKit = path.join(tempDir, "index_temp.kit");
 
 		// Generate the post-list HTML
-		let postListHtml = "";
-		posts.forEach((post) => {
-			const formattedDate = post.date.toLocaleDateString("en-US", {
-				year: "numeric",
-				month: "long",
-				day: "numeric",
-			});
-
-			postListHtml += `<div class="post-item">
-      <h2><a href="${post.slug}/">${post.title}</a></h2>
-    </div>\n`;
-		});
+		const postListHtml = posts.map((post) => `<h2><a href="${post.slug}/">${post.title}</a></h2>`).join("\n");
 
 		// Create the content with a variable
 		let content = `<!--$postList ${postListHtml}-->\n`;

@@ -55,7 +55,6 @@ function createSlug(title) {
 		.trim();
 }
 
-
 /**
  * Saves posts data to posts.json
  * @param {Array} posts - Array of post objects
@@ -249,7 +248,7 @@ export async function fetchEmails() {
 
 	return {
 		totalEmails: emails.length,
-		totalPosts: allPosts.length
+		totalPosts: allPosts.length,
 	};
 }
 
