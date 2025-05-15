@@ -15,7 +15,6 @@ out/
 # Environment
 .env
 build/
-posts/
 posts.json
 temp/
 
@@ -27,10 +26,6 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# Logs
-logs/
-*.log
 
 # Claude Code
 **/.claude/

@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: main
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -25,13 +23,12 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Setup NPM
-        run: npm install
-
       - name: Run complete workflow
         env:
           JMAP_TOKEN: ${{ secrets.JMAP_TOKEN }}
-        run: npm start
+        run: |
+          npm install
+          npm start
 
       - name: Upload static files as artifact
         id: deployment
