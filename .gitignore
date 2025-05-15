@@ -1,11 +1,7 @@
 # Node.js
 node_modules/
 npm-debug.log
-yarn-error.log
-yarn-debug.log
 .npm/
-.pnpm-store/
-.yarn/
 
 # IntelliJ
 .idea/
@@ -32,4 +28,6 @@ Thumbs.db
 # Logs
 logs/
 *.log
-**/.claude/settings.local.json
+
+# Claude Code
+**/.claude/

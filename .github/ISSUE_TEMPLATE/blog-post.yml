@@ -1,7 +1,0 @@
-name: Blog Post
-description: Create a new blog post
-labels: ["blog-post"]
-body:
-  - type: textarea
-    attributes:
-      label: Poem
