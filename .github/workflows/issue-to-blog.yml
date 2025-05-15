@@ -34,7 +34,7 @@ jobs:
           # Get issue body and clean up the heading markdown
           BODY="${{ github.event.issue.body }}"
           # Remove "### Poem" heading and trim whitespace
-          CLEAN_BODY=$(echo "$BODY" | sed 's/### Poem//g' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | sed '/^$/d')
+          CLEAN_BODY=$(echo "$BODY" | sed 's/### Poem//g' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
           # Create kit file with HTML structure
           cat > "${POST_PATH}" << EOL
