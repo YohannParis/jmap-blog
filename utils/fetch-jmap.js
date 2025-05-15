@@ -88,7 +88,7 @@ const emails_response = await fetch(api_url, {
 				{
 					accountId: account_id,
 					filter: {
-						inMailbox: mailbox_id
+						inMailbox: mailbox_id,
 					},
 					sort: [{ property: "receivedAt", isAscending: false }],
 				},
@@ -115,7 +115,7 @@ const emails = emails_data["methodResponses"][1][1]["list"];
 console.log(`Found ${emails.length} emails in the mailbox`);
 
 // Filter emails that don't have the $seen keyword
-const unseenEmails = emails.filter(email => {
+const unseenEmails = emails.filter((email) => {
 	// Check if the email has keywords and if $seen is NOT among them
 	return !email.keywords || !email.keywords["$seen"];
 });
@@ -161,14 +161,14 @@ for (const email of unseenEmails) {
 						accountId: account_id,
 						update: {
 							[email_id]: {
-								"keywords/$seen": true
-							}
-						}
+								"keywords/$seen": true,
+							},
+						},
 					},
-					"c"
-				]
-			]
-		})
+					"c",
+				],
+			],
+		}),
 	});
 	const update_result = await response_2.json();
 

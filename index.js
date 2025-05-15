@@ -91,42 +91,35 @@ async function generatePostPages(posts) {
 	await fs.ensureDir(tempDir);
 
 	for (const post of posts) {
-		// Create a temporary content file for the markdown content
-		const tempMdFile = path.join(tempDir, `${post.slug}.html`);
+		try {
+			// Convert markdown to HTML
+			const htmlContent = marked(post.content);
 
-		// Convert markdown to HTML using marked
-		const htmlContent = ```
-			<h1>${post.title}</h1>
-    	<article>${marked(post.content)}</article>
-		```;
+			// Create a simple template file with variables
+			const tempKitFile = path.join(tempDir, `${post.slug}_template.kit`);
 
-		await fs.writeFile(tempMdFile, htmlContent, "utf8");
+			// Set the variables directly in the template
+			const kitContent = `<!--$postTitle ${post.title}-->
+<!--$postContent ${htmlContent}-->
+<!-- @import ../templates/post.kit -->`;
 
-		// Create a temporary Kit file for the post with variables
-		const tempPostKit = path.join(tempDir, `${post.slug}_temp.kit`);
+			await fs.writeFile(tempKitFile, kitContent, "utf8");
 
-		// Set variables for the template
-		let content = `<!--$postTitle ${post.title}-->\n`;
-		content += `<!--$postFile ${path.basename(tempMdFile)}-->\n`;
+			// Create output directory for the post
+			const outputDir = path.join(__dirname, "build", post.slug);
+			await fs.ensureDir(outputDir);
 
-		// Include the post template
-		content += `<!-- @import ../templates/post.kit -->`;
+			// Compile the post to index.html
+			const outputPath = path.join(outputDir, "index.html");
+			const result = await kit.compile(tempKitFile, outputPath);
 
-		// Write the temporary file
-		await fs.writeFile(tempPostKit, content, "utf8");
-
-		// Create a directory for the post (for clean URLs)
-		const postDir = path.join(__dirname, "build", post.slug);
-		await fs.ensureDir(postDir);
-
-		// Compile the post to index.html inside the post directory
-		const outputPath = path.join(postDir, "index.html");
-		const result = await kit.compile(tempPostKit, outputPath);
-
-		if (result.successful) {
-			console.log(`Generated post: ${post.slug}/`);
-		} else {
-			console.error(`Error generating ${post.slug}/: ${result.resultMessage}`);
+			if (result.successful) {
+				console.log(`Generated post: ${post.slug}/`);
+			} else {
+				console.error(`Error generating ${post.slug}/: ${result.resultMessage}`);
+			}
+		} catch (error) {
+			console.error(`Error processing post ${post.slug}:`, error);
 		}
 	}
 
@@ -155,7 +148,6 @@ async function generateIndexPage(posts) {
 
 		postListHtml += `<div class="post-item">
       <h2><a href="${post.slug}/">${post.title}</a></h2>
-      <div class="date">${formattedDate}</div>
     </div>\n`;
 	});
 
@@ -175,9 +167,6 @@ async function generateIndexPage(posts) {
 	} else {
 		console.error(`Error generating index.html: ${result.resultMessage}`);
 	}
-
-	// Clean up temp directory
-	await fs.remove(tempDir);
 }
 
 // Run the generator
