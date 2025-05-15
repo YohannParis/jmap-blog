@@ -12,11 +12,11 @@ async function runWorkflow() {
 
 	try {
 		// Step 1: Fetch new emails and update posts.json
-		console.log("\nFetching new emails...");
+		console.log("\nStep 1: Fetching new emails...");
 		await fetchEmails();
 
 		// Step 2: Build the static site
-		console.log("\nBuilding the static site...");
+		console.log("\nStep 2: Building the static site...");
 		await generateBlog();
 
 		console.log("\nWorkflow completed successfully!");

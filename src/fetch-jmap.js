@@ -173,11 +173,9 @@ export async function fetchEmails() {
 
 	// Process all emails
 	for (const email of emails) {
-		const email_id = email.id;
 		const title = email.subject;
-		const date = email.receivedAt;
-		const formattedDate = date.split("T")[0];
 		const slug = createSlug(title);
+		const formattedDate = email.receivedAt.split("T")[0];
 
 		const params = {
 			accountId: account_id,
@@ -193,54 +191,18 @@ export async function fetchEmails() {
 		});
 		const body = await body_response.text();
 
-		console.log("\n———");
-		console.log(date, title);
+		console.log(formattedDate, title);
 
-		// Format the body with proper markdown line breaks
+		// Format the body with proper Markdown line breaks
 		const formattedBody = addLineBreaks(body);
 
 		// Create a post object and add it to allPosts
-		const post = {
+		allPosts.push({
 			title,
 			date: formattedDate,
 			content: formattedBody,
 			slug,
-		};
-
-		// Add the post to our collection
-		allPosts.push(post);
-		console.log(`Added post: ${slug}`);
-
-		// Mark email as read
-		const seen_response = await fetch(api_url, {
-			method: "POST",
-			headers,
-			body: JSON.stringify({
-				using: ["urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail"],
-				methodCalls: [
-					[
-						"Email/set",
-						{
-							accountId: account_id,
-							update: {
-								[email_id]: {
-									"keywords/$seen": true,
-								},
-							},
-						},
-						"c",
-					],
-				],
-			}),
 		});
-		const seen_result = await seen_response.json();
-
-		if (seen_result.methodResponses[0][0] === "Email/set") {
-			console.log(`Marked email "${title}" as seen`);
-		} else {
-			console.error("Failed to mark email as seen:", seen_result);
-		}
-		console.log("———\n");
 	}
 
 	// Save all posts to posts.json
