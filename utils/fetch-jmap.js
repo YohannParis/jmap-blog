@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import dotenv from "dotenv";
-import { createMarkdownFile } from "./tomarkdown.js";
+import { createMarkdownFile } from "./markdown.js";
 
 /**
  * Expands a URI template with the given parameters.
