@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Check new emails and convert them to markdown
+    name: Check new emails and build the site
     runs-on: ubuntu-latest
     environment: github-pages
     permissions:
@@ -28,13 +28,10 @@ jobs:
       - name: Setup NPM
         run: npm install
 
-      - name: Run fetch-email script
+      - name: Run complete workflow
         env:
           JMAP_TOKEN: ${{ secrets.JMAP_TOKEN }}
-        run: npm run fetch-email
-
-      - name: Build static files
-        run: npm run build
+        run: npm start
 
       - name: Upload static files as artifact
         id: deployment

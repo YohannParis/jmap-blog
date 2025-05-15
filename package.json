@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "node index.js",
-    "build:direct": "node utils/build-site.js",
-    "fetch": "node utils/fetch-jmap.js",
+    "start": "node index.js",
+    "build": "node src/build-site.js",
+    "fetch": "node src/fetch-jmap.js",
     "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html"
   },
   "keywords": [],
