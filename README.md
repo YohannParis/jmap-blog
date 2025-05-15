@@ -13,7 +13,7 @@ A minimalist blog for publishing poems via email. This project offers a simple w
 
 ```
 poem-blog/
-├── .github/workflows/     # GitHub Actions workflow 
+├── .github/workflows/     # GitHub Actions workflow
 ├── build/                 # Generated static site (not tracked in git)
 ├── src/                   # Source code
 │   ├── kit/               # Custom templating engine
@@ -48,6 +48,7 @@ There are several ways to run the application:
 ### GitHub Actions Workflow
 
 The project includes a GitHub Actions workflow that:
+
 - Runs on a schedule or can be triggered manually
 - Fetches new poems from your email
 - Builds the static site

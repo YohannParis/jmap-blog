@@ -102,7 +102,7 @@ export async function fetchEmails() {
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${process.env.JMAP_TOKEN}`,
 	};
-	
+
 	console.log("Connecting to JMAP server...");
 	const session_response = await fetch(authUrl, {
 		method: "GET",
@@ -232,7 +232,7 @@ export async function fetchEmails() {
 		};
 
 		// Check if post already exists (by slug), and update it if it does, otherwise add it
-		const existingPostIndex = existingPosts.findIndex(p => p.slug === slug);
+		const existingPostIndex = existingPosts.findIndex((p) => p.slug === slug);
 		if (existingPostIndex >= 0) {
 			existingPosts[existingPostIndex] = post;
 			console.log(`Updated existing post: ${slug}`);
@@ -275,11 +275,11 @@ export async function fetchEmails() {
 
 	// Save updated posts
 	await savePosts(existingPosts);
-	
+
 	return {
 		totalEmails: emails.length,
 		processedEmails: unseenEmails.length,
-		totalPosts: existingPosts.length
+		totalPosts: existingPosts.length,
 	};
 }
 

@@ -54,10 +54,10 @@ async function generateBlog() {
 		}
 
 		// Process each post
-		const processedPosts = posts.map(post => {
+		const processedPosts = posts.map((post) => {
 			return {
 				...post,
-				date: new Date(post.date)
+				date: new Date(post.date),
 			};
 		});
 
@@ -94,9 +94,7 @@ async function generatePostPages(posts) {
 			try {
 				// Format the content with paragraph tags for proper HTML display
 				const paragraphs = post.content.split("\n\n");
-				const htmlContent = paragraphs
-					.map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`)
-					.join("\n");
+				const htmlContent = paragraphs.map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`).join("\n");
 
 				// Create a simple template file with variables
 				const tempKitFile = path.join(tempDir, `${post.slug}_template.kit`);
