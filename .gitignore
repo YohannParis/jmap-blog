@@ -15,6 +15,7 @@ out/
 # Environment
 .env
 build/
+posts/
 
 # OS generated files
 .DS_Store
