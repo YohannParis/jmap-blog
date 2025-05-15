@@ -48,13 +48,11 @@ function addLineBreaks(text) {
  */
 function createSlug(title) {
 	// Sanitize the title for use as a slug
-	const sanitizedTitle = title
+	return title
 		.toLowerCase()
 		.replace(/[^\w\s-]/g, "") // Remove special characters
 		.replace(/\s+/g, "-") // Replace spaces with hyphens
 		.trim();
-
-	return sanitizedTitle;
 }
 
 /**
