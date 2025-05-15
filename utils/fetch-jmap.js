@@ -135,11 +135,11 @@ for (const email of unseenEmails) {
 	};
 
 	const url = expandURITemplate(download_url, params);
-	const response = await fetch(url, {
+	const body_response = await fetch(url, {
 		method: "GET",
 		headers,
 	});
-	const body = await response.text();
+	const body = await body_response.text();
 
 	console.log("\n———");
 	console.log(date, title);
@@ -149,7 +149,7 @@ for (const email of unseenEmails) {
 	console.log(`Created markdown file: ${filePath}`);
 
 	// Mark email as read
-	const response_2 = await fetch(api_url, {
+	const seen_response = await fetch(api_url, {
 		method: "POST",
 		headers,
 		body: JSON.stringify({
@@ -170,12 +170,12 @@ for (const email of unseenEmails) {
 			],
 		}),
 	});
-	const update_result = await response_2.json();
+	const seen_result = await seen_response.json();
 
-	if (update_result.methodResponses[0][0] === "Email/set") {
+	if (seen_result.methodResponses[0][0] === "Email/set") {
 		console.log(`Marked email "${title}" as seen`);
 	} else {
-		console.error("Failed to mark email as seen:", update_result);
+		console.error("Failed to mark email as seen:", seen_result);
 	}
 	console.log("———\n");
 }
