@@ -16,6 +16,8 @@ out/
 .env
 build/
 posts/
+posts.json
+temp/
 
 # OS generated files
 .DS_Store

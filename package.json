@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "build": "node index.js",
-    "fetch-email": "node utils/fetch-jmap.js",
+    "build:direct": "node utils/build-site.js",
+    "fetch": "node utils/fetch-jmap.js",
     "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html"
   },
   "keywords": [],
@@ -16,9 +17,7 @@
     "@octokit/rest": "21.1.1",
     "dotenv": "16.5.0",
     "fs-extra": "11.3.0",
-    "gray-matter": "4.0.3",
     "imap": "0.8.17",
-    "mailparser": "3.7.2",
-    "marked": "15.0.11"
+    "mailparser": "3.7.2"
   }
 }

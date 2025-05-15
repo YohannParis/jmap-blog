@@ -1,6 +1,13 @@
 #!/usr/bin/env node
 import dotenv from "dotenv";
-import { createMarkdownFile } from "./markdown.js";
+import fs from "fs-extra";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Set up paths
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const postsJsonPath = path.join(__dirname, "..", "posts.json");
 
 /**
  * Expands a URI template with the given parameters.
@@ -19,6 +26,64 @@ export function expandURITemplate(template, params) {
 	}
 
 	return new URL(expanded);
+}
+
+/**
+ * Adds two spaces at the end of each non-empty line for proper markdown line breaks
+ * @param {string} text - The input text
+ * @returns {string} - Text with line breaks properly formatted for markdown
+ */
+function addLineBreaks(text) {
+	// Each line that isn't empty should end with two spaces
+	return text
+		.split("\n")
+		.map((line) => (line.trim() === "" ? "" : line.replace(/\s*$/, "  ")))
+		.join("\n");
+}
+
+/**
+ * Creates a slug from the title
+ * @param {string} title - The title
+ * @returns {string} A sanitized slug
+ */
+function createSlug(title) {
+	// Sanitize the title for use as a slug
+	const sanitizedTitle = title
+		.toLowerCase()
+		.replace(/[^\w\s-]/g, "") // Remove special characters
+		.replace(/\s+/g, "-") // Replace spaces with hyphens
+		.trim();
+
+	return sanitizedTitle;
+}
+
+/**
+ * Loads the existing posts from posts.json, or returns an empty array if the file doesn't exist
+ * @returns {Promise<Array>} Array of posts
+ */
+async function loadExistingPosts() {
+	try {
+		if (await fs.pathExists(postsJsonPath)) {
+			const postsData = await fs.readFile(postsJsonPath, "utf8");
+			return JSON.parse(postsData);
+		}
+	} catch (error) {
+		console.error("Error reading posts.json:", error.message);
+	}
+	return [];
+}
+
+/**
+ * Saves posts data to posts.json
+ * @param {Array} posts - Array of post objects
+ */
+async function savePosts(posts) {
+	try {
+		await fs.writeFile(postsJsonPath, JSON.stringify(posts, null, 2), "utf8");
+		console.log(`Saved posts.json with ${posts.length} posts`);
+	} catch (error) {
+		console.error("Error saving posts.json:", error.message);
+	}
 }
 
 dotenv.config();
@@ -122,10 +187,16 @@ const unseenEmails = emails.filter((email) => {
 
 console.log(`Processing ${unseenEmails.length} unseen emails`);
 
+// Load existing posts
+const existingPosts = await loadExistingPosts();
+
+// Process new emails
 for (const email of unseenEmails) {
 	const email_id = email.id;
 	const title = email.subject;
 	const date = email.receivedAt;
+	const formattedDate = date.split("T")[0];
+	const slug = createSlug(title);
 
 	const params = {
 		accountId: account_id,
@@ -144,9 +215,26 @@ for (const email of unseenEmails) {
 	console.log("\n———");
 	console.log(date, title);
 
-	// Create a markdown file from the email data
-	const filePath = await createMarkdownFile(title, date, body);
-	console.log(`Created markdown file: ${filePath}`);
+	// Format the body with proper markdown line breaks
+	const formattedBody = addLineBreaks(body);
+
+	// Create a post object
+	const post = {
+		title,
+		date: formattedDate,
+		content: formattedBody,
+		slug,
+	};
+
+	// Check if post already exists (by slug), and update it if it does, otherwise add it
+	const existingPostIndex = existingPosts.findIndex(p => p.slug === slug);
+	if (existingPostIndex >= 0) {
+		existingPosts[existingPostIndex] = post;
+		console.log(`Updated existing post: ${slug}`);
+	} else {
+		existingPosts.push(post);
+		console.log(`Added new post: ${slug}`);
+	}
 
 	// Mark email as read
 	const seen_response = await fetch(api_url, {
@@ -179,3 +267,6 @@ for (const email of unseenEmails) {
 	}
 	console.log("———\n");
 }
+
+// Save updated posts
+await savePosts(existingPosts);
