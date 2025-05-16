@@ -8,7 +8,7 @@ This project offers a simple workflow by using a JMAP mailbox as CMS, and make i
 1. Send a post to your email account (with JMAP support)
 2. The app fetches emails from a designated mailbox
 3. Each post is processed and stored in a `posts.json` file
-4. A static site is generated with a clean, typography-focused design
+4. A static site is generated with [JS port of the .kit language](https://codekitapp.com/help/kit/)
 5. An RSS feed is created at `/rss.xml` for easy subscription
 
 ## Project Structure
