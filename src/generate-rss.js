@@ -38,10 +38,16 @@ export function generateRSSContent(posts, siteUrl, siteTitle) {
 		const postDate = new Date(post.date);
 		const pubDate = postDate.toUTCString();
 		const postUrl = `${siteUrl}${post.slug}/`;
+		
+		// Format content as HTML for proper line breaks
+		const paragraphs = post.content.split("\n\n");
+		const formattedContent = paragraphs
+			.map(p => `<p>${p.replace(/\n/g, "<br>")}</p>`)
+			.join("\n");
 
 		rss += `    <item>
       <title>${escapeXml(post.title)}</title>
-      <description>${escapeXml(post.content)}</description>
+      <description><![CDATA[${formattedContent}]]></description>
       <pubDate>${pubDate}</pubDate>
       <link>${escapeXml(postUrl)}</link>
       <guid isPermaLink="true">${escapeXml(postUrl)}</guid>
