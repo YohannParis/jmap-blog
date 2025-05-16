@@ -2,10 +2,11 @@
 
 /**
  * Complete workflow script
- * Handles both email fetching and static site generation
+ * Handles email fetching, static site generation, and RSS feed creation
  */
 import { fetchEmails } from "./src/fetch-jmap.js";
 import { generateBlog } from "./src/build-site.js";
+import { generateRSSFeed } from "./src/generate-rss.js";
 
 async function runWorkflow() {
 	console.log("Starting workflow...");
@@ -18,6 +19,10 @@ async function runWorkflow() {
 		// Step 2: Build the static site
 		console.log("\nStep 2: Building the static site...");
 		await generateBlog();
+		
+		// Step 3: Generate RSS feed
+		console.log("\nStep 3: Generating RSS feed...");
+		await generateRSSFeed();
 
 		console.log("\nWorkflow completed successfully!");
 		console.log("The static site has been generated in the 'build' directory");

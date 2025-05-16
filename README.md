@@ -8,6 +8,7 @@ A minimalist blog for publishing poems via email. This project offers a simple w
 2. The app fetches emails from a designated "Poems" mailbox
 3. Each poem is processed and stored in a `posts.json` file
 4. A static site is generated with a clean, typography-focused design
+5. An RSS feed is created at `/rss.xml` for easy subscription
 
 ## Project Structure
 
@@ -18,7 +19,8 @@ poem-blog/
 ├── src/                   # Source code
 │   ├── kit/               # Custom templating engine
 │   ├── build-site.js      # Static site generator
-│   └── fetch-jmap.js      # Email fetching module
+│   ├── fetch-jmap.js      # Email fetching module
+│   └── generate-rss.js    # RSS feed generator
 ├── templates/             # HTML templates
 │   ├── index.kit          # Homepage template
 │   ├── post.kit           # Post template
@@ -41,9 +43,10 @@ There are several ways to run the application:
 
 ### Local Development
 
-- `npm start` - Run the complete workflow (fetch emails → build site)
+- `npm start` - Run the complete workflow (fetch emails → build site → generate RSS)
 - `npm run fetch` - Only fetch new emails and update posts.json
 - `npm run build` - Only build the static site from posts.json
+- `npm run rss` - Only generate the RSS feed from posts.json
 
 ### GitHub Actions Workflow
 
@@ -57,6 +60,7 @@ The project includes a GitHub Actions workflow that:
 ## Configuration
 
 - **Email Settings**: Add your JMAP token to the `.env` file
+- **Site Settings**: Configure site URL, title, and description in the `.env` file for the RSS feed
 - **Styling**: Edit the templates in the `templates/` directory
 - **Schedule**: Modify the cron schedule in `.github/workflows/emails-to-deploy.yml`
 
