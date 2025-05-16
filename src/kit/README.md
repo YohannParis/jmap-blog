@@ -4,7 +4,7 @@ A simple utility for processing the Kit templating language, which adds imports 
 
 ## What is Kit?
 
-Kit is a simple HTML templating language that adds two primary features:
+[Created by CodeKit](https://codekitapp.com/help/kit/), Kit is a simple HTML templating language that adds two primary features:
 
 1. **Imports** - Include other files
 2. **Variables** - Define and use variables within your HTML
