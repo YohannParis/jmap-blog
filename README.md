@@ -1,19 +1,19 @@
-# Poem Blog
+# JMAP Blog
 
-A minimalist blog for publishing poems via email. This project offers a simple workflow for turning emails into a beautiful static website.
+A minimalist blog for publishing via email. This project offers a simple workflow for turning emails into a simple static website.
 
 ## How It Works
 
-1. Send a poem to your email account (with JMAP support)
+1. Send a post to your email account (with JMAP support)
 2. The app fetches emails from a designated "Poems" mailbox
-3. Each poem is processed and stored in a `posts.json` file
+3. Each post is processed and stored in a `posts.json` file
 4. A static site is generated with a clean, typography-focused design
 5. An RSS feed is created at `/rss.xml` for easy subscription
 
 ## Project Structure
 
 ```
-poem-blog/
+jmap-blog/
 ├── .github/workflows/     # GitHub Actions workflow
 ├── build/                 # Generated static site (not tracked in git)
 ├── src/                   # Source code
@@ -53,13 +53,13 @@ There are several ways to run the application:
 The project includes a GitHub Actions workflow that:
 
 - Runs on a schedule or can be triggered manually
-- Fetches new poems from your email
+- Fetches all posts from your email folder
 - Builds the static site
 - Deploys to GitHub Pages
 
 ## Configuration
 
-- **Email Settings**: Add your JMAP token to the `.env` file
+- **Email Settings**: Add your JMAP token and Mailbox name to the `.env` file
 - **Site Settings**: Configure site URL, title, and email in the `.env` file for the RSS feed
 - **Styling**: Edit the templates in the `templates/` directory
 - **Schedule**: Modify the cron schedule in `.github/workflows/emails-to-deploy.yml`
@@ -68,7 +68,7 @@ The project includes a GitHub Actions workflow that:
 
 - Node.js 20+
 - An email account with JMAP support
-- A GitHub repository (for GitHub Pages deployment)
+- A GitHub repository (for GitHub Pages deployment only)
 
 ## License
 
