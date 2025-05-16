@@ -19,7 +19,7 @@ async function runWorkflow() {
 		// Step 2: Build the static site
 		console.log("\nStep 2: Building the static site...");
 		await generateBlog();
-		
+
 		// Step 3: Generate RSS feed
 		console.log("\nStep 3: Generating RSS feed...");
 		await generateRSSFeed();

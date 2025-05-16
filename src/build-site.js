@@ -2,10 +2,21 @@ import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import * as kit from "./kit/index.js";
+import dotenv from "dotenv";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.join(__dirname, "..");
+
+/**
+ * Add the SITE_* .env as .kit variable
+ */
+function getEnv() {
+	let env = `<!-- $siteUrl ${process.env.SITE_URL} -->\n`;
+	env += `<!-- $siteEmail ${process.env.SITE_EMAIL} -->\n`;
+	env += `<!-- $siteTitle ${process.env.SITE_TITLE} -->\n`;
+	return env;
+}
 
 /**
  * Blog Post Generator
@@ -100,17 +111,19 @@ async function generatePostPages(posts) {
 				const tempKitFile = path.join(tempDir, `${post.slug}_template.kit`);
 
 				// Set the variables directly in the template
-				const kitContent = `<!--$postTitle ${post.title}-->
-<!--$postContent ${htmlContent}-->
-<!-- @import ../../templates/post.kit -->`;
+				let content = getEnv();
+				content += `<!--$postTitle ${post.title}-->\n`;
+				content += `<!--$postContent ${htmlContent}-->\n`;
+				content += `<!-- @import ../../templates/post.kit -->`;
 
-				await fs.writeFile(tempKitFile, kitContent, "utf8");
+				await fs.writeFile(tempKitFile, content, "utf8");
 
 				// Create output directory for the post
 				const outputDir = path.join(rootDir, "build", post.slug);
 				await fs.ensureDir(outputDir);
 
-				// Compile the post to index.html
+				// Compile the pos
+				// t to index.html
 				const outputPath = path.join(outputDir, "index.html");
 				const result = await kit.compile(tempKitFile, outputPath);
 
@@ -144,7 +157,8 @@ async function generateIndexPage(posts) {
 		const postListHtml = posts.map((post) => `<h2><a href="${post.slug}/">${post.title}</a></h2>`).join("\n");
 
 		// Create the content with a variable
-		let content = `<!--$postList ${postListHtml}-->\n`;
+		let content = getEnv();
+		content += `<!-- $postList ${postListHtml} -->\n`;
 		content += `<!-- @import ../../templates/index.kit -->`;
 
 		// Write the temporary file

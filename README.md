@@ -60,7 +60,7 @@ The project includes a GitHub Actions workflow that:
 ## Configuration
 
 - **Email Settings**: Add your JMAP token to the `.env` file
-- **Site Settings**: Configure site URL, title, and description in the `.env` file for the RSS feed
+- **Site Settings**: Configure site URL, title, and email in the `.env` file for the RSS feed
 - **Styling**: Edit the templates in the `templates/` directory
 - **Schedule**: Modify the cron schedule in `.github/workflows/emails-to-deploy.yml`
 
