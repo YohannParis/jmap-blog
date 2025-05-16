@@ -73,8 +73,8 @@ async function savePosts(posts) {
  */
 export async function fetchEmails() {
 	dotenv.config();
-	if (!process.env.JMAP_TOKEN) {
-		throw new Error("Please set your JMAP_TOKEN");
+	if (!process.env.JMAP_TOKEN || !process.env.MAILBOX) {
+		throw new Error("Please set your JMAP_TOKEN and/or MAILBOX");
 	}
 
 	// Get Session
@@ -96,7 +96,7 @@ export async function fetchEmails() {
 	const account_id = session.primaryAccounts["urn:ietf:params:jmap:mail"];
 
 	// Get the mailbox
-	const mailbox_name = "Poems";
+	const mailbox_name = process.env.MAILBOX;
 	console.log(`Looking for mailbox: ${mailbox_name}`);
 	const mailbox_response = await fetch(api_url, {
 		method: "POST",
