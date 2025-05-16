@@ -1,7 +1,7 @@
 {
-  "name": "poem-blog",
+  "name": "jmap-blog",
   "version": "1.0.0",
-  "description": "A minimalist blog for publishing poems via email",
+  "description": "A minimalist blog for publishing posts via email",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -13,7 +13,6 @@
   "keywords": [
     "blog",
     "static-site",
-    "poems",
     "email",
     "jmap"
   ],
@@ -21,7 +20,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/YohannParis/poem-blog"
+    "url": "https://github.com/YohannParis/jmap-blog"
   },
   "engines": {
     "node": ">=20.0.0"
