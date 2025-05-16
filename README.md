@@ -1,7 +1,8 @@
 # JMAP Blog
 
-A minimalist blog for publishing via emails. 
-This project offers a simple workflow by using a JMAP mailbox as CMS, and make it a simple static website.
+A minimalist blog for publishing via emails.
+
+This project offers a simple workflow by using a [FastMail](https://fastmail.com) mailbox as CMS, and make it a simple static website.
 
 ## How It Works
 
