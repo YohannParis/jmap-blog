@@ -64,7 +64,7 @@ The project includes a GitHub Actions workflow that:
 
 - **Email Settings**: Add your JMAP token and Mailbox name to the `.env` file
 - **Site Settings**: Configure site URL, title, and email in the `.env` file
-- **Styling**: Edit the [.kit templates](https://codekitapp.com/help/kit/) in the `templates/` directory 
+- **Styling**: Edit the [.kit templates](https://codekitapp.com/help/kit/) in the `templates/` directory
 - **Schedule**: Modify the cron schedule in `.github/workflows/emails-to-deploy.yml`
 
 ## Requirements

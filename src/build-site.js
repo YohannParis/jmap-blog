@@ -4,6 +4,8 @@ import { fileURLToPath } from "url";
 import * as kit from "./kit/index.js";
 import dotenv from "dotenv";
 
+dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.join(__dirname, "..");
@@ -61,6 +63,8 @@ async function generateBlog() {
 
 		if (posts.length === 0) {
 			console.log("No posts found in posts.json");
+			await generateIndexPage();
+			console.log("Empty Blog generation complete!");
 			return;
 		}
 
@@ -153,8 +157,13 @@ async function generateIndexPage(posts) {
 		// Create a temporary index Kit file
 		const tempIndexKit = path.join(tempDir, "index_temp.kit");
 
-		// Generate the post-list HTML
-		const postListHtml = posts.map((post) => `<h2><a href="${post.slug}/">${post.title}</a></h2>`).join("\n");
+		let postListHtml;
+		if (!posts || posts.length === 0) {
+			postListHtml = `<h2>Coming soon...</h2>`;
+		} else {
+			// Generate the post-list HTML
+			postListHtml = posts.map((post) => `<h2><a href="${post.slug}/">${post.title}</a></h2>`).join("\n");
+		}
 
 		// Create the content with a variable
 		let content = getEnv();
