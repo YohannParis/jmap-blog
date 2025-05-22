@@ -4,11 +4,12 @@
   "description": "A minimalist blog for publishing posts via email",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "build": "node src/build-site.js",
+    "start": "node index.js && npm run format_build",
+    "build": "node src/build-site.js && npm run format_build",
     "fetch": "node src/fetch-jmap.js",
     "rss": "node src/generate-rss.js",
-    "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html"
+    "format": "npx prettier --write .  && npx prettier \"./templates/*.kit\" --write --parser html",
+    "format_build": "npx prettier build/ --write --ignore-path /build"
   },
   "keywords": [
     "blog",
